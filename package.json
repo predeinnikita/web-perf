@@ -1,0 +1,17 @@
+{
+  "name": "web-perfomance-metrics",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build:core": "npx nx build core"
+  },
+  "private": true,
+  "devDependencies": {
+    "@nx/js": "17.0.3",
+    "nx": "17.0.3",
+    "typescript": "^5.2.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
