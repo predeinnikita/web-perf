@@ -6,6 +6,9 @@
     "build:core": "npx nx build core"
   },
   "private": true,
+  "dependencies": {
+    "rxjs": "^7.8.1"
+  },
   "devDependencies": {
     "@nx/js": "17.0.3",
     "nx": "17.0.3",
