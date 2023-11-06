@@ -1,5 +1,13 @@
 import { PERFORMANCE } from '../consts';
 
+export interface TimerNodeData {
+    name: string;
+    parentName?: string;
+    start?: number;
+    end?: number;
+    children?: TimerNodeModel[];
+}
+
 export class TimerNodeModel {
     public readonly name: string;
     public readonly parentName: string;
@@ -20,12 +28,22 @@ export class TimerNodeModel {
         return !!this.parentName;
     }
 
-    constructor(name: string, parentName?: string) {
-        this.name = name;
-        if (parentName) {
-            this.parentName = parentName;
+    constructor(data: TimerNodeData) {
+        this.name = data.name;
+        if (data.parentName) {
+            this.parentName = data.parentName;
         }
-        this.start = PERFORMANCE.now();
+        if (data.start || data.start === 0) {
+            this.start = data.start;
+        } else {
+            this.start = PERFORMANCE.now();
+        }
+        if (data.end || data.end === 0) {
+            this.end = data.end;
+        }
+        if (data.children) {
+            this.children = [...data.children];
+        }
     }
 
     public hasChild(name: string): boolean {

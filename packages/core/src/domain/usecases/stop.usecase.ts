@@ -1,7 +1,7 @@
 import { UseCase } from '../../../../../libs/shared-kernel';
-import { TimerNodeModel } from '../models/timer-node-model';
-import { TimerAbstractRepository } from '../repositories/timer.repository';
-import { PrintAbstractService } from '../services/print.service';
+import { TimerNodeModel } from '../models';
+import { TimerAbstractRepository } from '../repositories';
+import { PrintAbstractService } from '../services';
 
 export class StopUseCase implements UseCase<any, TimerNodeModel> {
     constructor(

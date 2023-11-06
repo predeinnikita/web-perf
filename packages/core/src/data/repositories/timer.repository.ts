@@ -12,7 +12,7 @@ export class TimerRepository extends TimerAbstractRepository {
         if (this.hasDataModel(name)) {
             throw Error(ErrorMessage.Exists)
         }
-        const node = new TimerNodeModel(name, parentName);
+        const node = new TimerNodeModel({ name, parentName });
         this.add(node, parentName);
 
         return node;
