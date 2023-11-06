@@ -1,19 +1,19 @@
-import { MetricsAbstractRepository } from '../../domain';
-import { DataModel } from '../../domain';
+import { TimerAbstractRepository } from '../../domain';
+import { TimerNodeModel } from '../../domain';
 import { ErrorMessage } from '../../../../../libs/shared-kernel/error';
 
-export class MetricsRepository extends MetricsAbstractRepository {
-    private data: DataModel[] = [];
+export class TimerRepository extends TimerAbstractRepository {
+    private nodes: TimerNodeModel[] = [];
 
     /**
      * Начать отсчет времени в узле
      */
-    public start(key: string, groupName?: string): DataModel {
-        if (this.hasDataModel(key)) {
+    public start(name: string, parentName?: string): TimerNodeModel {
+        if (this.hasDataModel(name)) {
             throw Error(ErrorMessage.Exists)
         }
-        const node = new DataModel(key);
-        this.add(node, groupName);
+        const node = new TimerNodeModel(name, parentName);
+        this.add(node, parentName);
 
         return node;
     }
@@ -21,8 +21,8 @@ export class MetricsRepository extends MetricsAbstractRepository {
     /**
      * Остановить отсчет времени в узле
      */
-    public stop(key: string): DataModel | null {
-        const node = this.findNodeWithName(key);
+    public stop(name: string): TimerNodeModel | null {
+        const node = this.findNodeWithName(name);
         node?.stop();
 
         return node;
@@ -31,30 +31,30 @@ export class MetricsRepository extends MetricsAbstractRepository {
     /**
      * Проверка, есть ли узел с заданным именем в дереве
      */
-    private hasDataModel(key: string): boolean {
-        return this.data.some(data => data.name === key || data.hasChild(key));
+    private hasDataModel(name: string): boolean {
+        return this.nodes.some(data => data.name === name || data.hasChild(name));
     }
 
     /**
      * Добавляет узел в дерево. Если указана группа,
      * то ищет узел с названием groupName и добавляет в его потомки переданный узел
      */
-    private add(data: DataModel, groupName?: string): void {
-        if (groupName) {
-            return this.findNodeWithName(groupName)?.addChild(data);
+    private add(node: TimerNodeModel, parentName?: string): void {
+        if (parentName) {
+            return this.findNodeWithName(parentName)?.addChild(node);
         }
-        this.data.push(data);
+        this.nodes.push(node);
     }
 
 
     /**
      * Рекурсивно находит узел с указанным именем
      */
-    private findNodeWithName(key: string): DataModel | null {
-        let node: DataModel | null = null;
-        const recursiveSearch = (children: DataModel[]) => {
+    private findNodeWithName(name: string): TimerNodeModel | null {
+        let node: TimerNodeModel | null = null;
+        const recursiveSearch = (children: TimerNodeModel[]) => {
             for (let child of children) {
-                if (child.name === key) {
+                if (child.name === name) {
                     node = child;
                     return;
                 }
@@ -63,7 +63,7 @@ export class MetricsRepository extends MetricsAbstractRepository {
                 }
             }
         }
-        recursiveSearch(this.data);
+        recursiveSearch(this.nodes);
 
         return node;
     }

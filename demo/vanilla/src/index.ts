@@ -1,16 +1,22 @@
-import { MetricsRepository } from '../../../packages/core/src'
-console.log('Hello, world!');
+import { StartUseCase, TimerRepository, PrintService, StopUseCase } from '../../../packages/core/src'
 
-const metricaRepository = new MetricsRepository();
+const timerRepository = new TimerRepository();
+const printService = new PrintService()
+const startUseCase = new StartUseCase(timerRepository)
+const stopUseCase = new StopUseCase(timerRepository, printService);
 
-const res = metricaRepository.start('parent');
-metricaRepository.start('child1', 'parent');
-metricaRepository.start('childchild', 'child1')
-metricaRepository.start('child2', 'parent');
-metricaRepository.stop('child1');
+startUseCase.execute('parent');
+startUseCase.execute('child', 'parent');
+startUseCase.execute('child-child', 'child');
+startUseCase.execute('child2', 'parent');
+startUseCase.execute('parent2');
+
+stopUseCase.execute('parent2');
 
 setTimeout(() => {
-    metricaRepository.stop('parent');
-    console.log(res);
-}, 1000);
+    stopUseCase.execute('child');
+}, 1500);
 
+setTimeout(() => {
+    stopUseCase.execute('parent');
+}, 3000);

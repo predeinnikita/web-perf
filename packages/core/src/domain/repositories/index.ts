@@ -1,2 +1,2 @@
-export * from './metrics.repository';
+export * from './timer.repository';
 export * from './analytic.repository';

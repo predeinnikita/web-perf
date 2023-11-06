@@ -1,14 +1,20 @@
 import { UseCase } from '../../../../../libs/shared-kernel';
-import { Observable } from 'rxjs';
-import { DataModel } from '../models/data.model';
-import { MetricsAbstractRepository } from '../repositories/metrics.repository';
+import { TimerNodeModel } from '../models/timer-node-model';
+import { TimerAbstractRepository } from '../repositories/timer.repository';
+import { PrintAbstractService } from '../services/print.service';
 
-export class StopUseCase implements UseCase<any, DataModel> {
+export class StopUseCase implements UseCase<any, TimerNodeModel> {
     constructor(
-        private metricsRepository: MetricsAbstractRepository,
+        private metricsRepository: TimerAbstractRepository,
+        private printService: PrintAbstractService,
     ) {}
 
-    public execute(key: string): DataModel {
-        return this.metricsRepository.stop(key);
+    public execute(key: string): TimerNodeModel {
+        const timerNode = this.metricsRepository.stop(key);
+        if (!timerNode.hasParent) {
+            this.printService.print(timerNode);
+        }
+
+        return timerNode;
     }
 }

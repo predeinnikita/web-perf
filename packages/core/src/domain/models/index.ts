@@ -1,1 +1,1 @@
-export * from './data.model';
+export * from './timer-node-model';

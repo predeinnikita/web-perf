@@ -1,13 +1,13 @@
 import { UseCase } from '../../../../../libs/shared-kernel';
-import { MetricsAbstractRepository } from '../repositories';
-import { DataModel } from '../models';
+import { TimerAbstractRepository } from '../repositories';
+import { TimerNodeModel } from '../models';
 
-export class StartUseCase implements UseCase<any, DataModel> {
+export class StartUseCase implements UseCase<any, TimerNodeModel> {
     constructor(
-        private metricsRepository: MetricsAbstractRepository
+        private metricsRepository: TimerAbstractRepository,
     ) {}
 
-    public execute(key: string): DataModel {
-        return this.metricsRepository.start(key)
+    public execute(name: string, parentName?: string): TimerNodeModel {
+        return this.metricsRepository.start(name, parentName)
     }
 }
