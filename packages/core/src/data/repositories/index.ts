@@ -1,2 +1,3 @@
 export * from './timer.repository';
-export * from './navigation-timing.service';
+export * from './navigation.repository';
+export * from './memory.repository';

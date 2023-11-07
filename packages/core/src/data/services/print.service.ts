@@ -1,15 +1,15 @@
-import { PrintAbstractService, TimerNodeModel } from '../../domain';
+import { NodeModel, PrintAbstractService, TimerNodeModel } from '../../domain';
 
 export class PrintService extends PrintAbstractService {
-    public print(timerNode: TimerNodeModel): void {
-        if (!timerNode.children) {
-            console.log(`${timerNode.name}: ${timerNode.result}ms`);
+    public print(node: NodeModel): void {
+        if (!node.children) {
+            console.log(`${node.name}: ${node.result}${node.unit}`);
             return;
         }
 
-        console.group(`${timerNode.name}: ${timerNode.result}ms`);
-        for (const node of timerNode.children) {
-            this.print(node);
+        console.group(`${node.name}`);
+        for (const child of node.children) {
+            this.print(child);
         }
         console.groupEnd();
     }

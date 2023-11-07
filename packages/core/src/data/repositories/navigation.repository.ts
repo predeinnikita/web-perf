@@ -1,6 +1,4 @@
-import { NavigationTimingAbstractService } from '../../domain';
-import { PERFORMANCE, TimerNodeModel } from '../../domain';
-import { fromEvent, map, Observable } from 'rxjs';
+import { PERFORMANCE, TimerNodeModel, NavigationAbstractRepository } from '../../domain';
 
 export type Navigation = Partial<{
     activationStart: number,
@@ -45,10 +43,10 @@ export type Navigation = Partial<{
 
 const isNumber = (value: any) => typeof value === 'number';
 
-export class NavigationTimingService extends NavigationTimingAbstractService {
-    public getNavigationTimingData(): Observable<TimerNodeModel> {
-        return fromEvent(window, 'load').pipe(
-            map(() => {
+export class NavigationRepository extends NavigationAbstractRepository {
+    public getInfo(): Promise<TimerNodeModel> {
+        return new Promise<TimerNodeModel>(resolve => {
+            window.addEventListener('load', () => {
                 const [entry] = PERFORMANCE.getEntriesByType("navigation");
                 const data = entry.toJSON() as Navigation;
 
@@ -63,9 +61,9 @@ export class NavigationTimingService extends NavigationTimingAbstractService {
                 timerNode.addChild(networkGroup);
                 timerNode.addChild(domGroup)
 
-                return timerNode;
-            })
-        )
+                resolve(timerNode);
+            });
+        });
     }
 
     private createNetworkGroup(data: Navigation): TimerNodeModel {

@@ -7,7 +7,6 @@
   },
   "private": true,
   "dependencies": {
-    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@nx/js": "17.0.3",

@@ -1,4 +1,4 @@
-import { TimerAbstractRepository } from '../../domain';
+import { NodeModel, TimerAbstractRepository } from '../../domain';
 import { TimerNodeModel } from '../../domain';
 import { ErrorMessage } from '../../../../../libs/shared-kernel/error';
 
@@ -59,7 +59,7 @@ export class TimerRepository extends TimerAbstractRepository {
                     return;
                 }
                 if (child.children) {
-                    recursiveSearch(child.children);
+                    recursiveSearch(child.children as TimerNodeModel[]);
                 }
             }
         }

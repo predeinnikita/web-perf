@@ -3,16 +3,20 @@ import {
     TimerRepository,
     PrintService,
     StopUseCase,
-    NavigationTimingService
+    NavigationRepository,
+    MemoryRepository
 } from '../../../packages/core/src'
 
 const timerRepository = new TimerRepository();
 const printService = new PrintService();
-const navigationTimingService = new NavigationTimingService();
+const navigationTimingService = new NavigationRepository();
 
-navigationTimingService.getNavigationTimingData().subscribe(timerNode => {
+navigationTimingService.getInfo().then(timerNode => {
     printService.print(timerNode);
 });
+
+const memoryStats = new MemoryRepository().getInfo();
+printService.print(memoryStats);
 
 //
 // const startUseCase = new StartUseCase(timerRepository)
