@@ -1,7 +1,7 @@
 export abstract class NodeModel {
     public abstract readonly name: string;
     public abstract readonly parentName: string;
-    public abstract readonly unit: 'ms' | 'KiB';
+    public abstract readonly unit: 'ms' | 'KiB' | 'fps';
     public abstract children?: NodeModel[];
     public abstract get result(): number;
     public get hasParent(): boolean {
