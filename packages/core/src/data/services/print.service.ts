@@ -3,15 +3,26 @@ import { NodeModel, PrintAbstractService, TimerNodeModel } from '../../domain';
 export class PrintService extends PrintAbstractService {
     public print(node: NodeModel): void {
         if (!node.children) {
-            const emoji = node.unit === 'ms'? '⏲' : '💾'
+            const emoji = this.getEmojiByUnit(node.unit);
             console.log(`${emoji}${node.name}: ${node.result}${node.unit}`);
             return;
         }
 
-        console.group(`⚡${node.name}`);
+        console.groupCollapsed(`⚡${node.name}`);
         for (const child of node.children) {
             this.print(child);
         }
         console.groupEnd();
+    }
+
+    private getEmojiByUnit(unit: NodeModel['unit']): string {
+        switch (unit) {
+            case 'fps':
+                return '📷';
+            case 'KiB':
+                return '💾';
+            case 'ms':
+                return '⏲';
+        }
     }
 }
