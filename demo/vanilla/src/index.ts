@@ -6,7 +6,8 @@ import {
     NavigationRepository,
     MemoryRepository,
     FpsRepository,
-    FpsNodeModel
+    FpsNodeModel,
+    ErrorsRepository
 } from '../../../packages/core/src'
 
 const timerRepository = new TimerRepository();
@@ -27,3 +28,10 @@ const memoryStats = new MemoryRepository().getInfo();
 printService.print(memoryStats);
 
 fpsRepository.run();
+
+const errorsRepository = new ErrorsRepository();
+errorsRepository.registerErrorLogger((error: Event | string) => console.log(error));
+
+setInterval(() => {
+    throw Error('errororoor')
+}, 4000);
