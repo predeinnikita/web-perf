@@ -66,6 +66,10 @@ export class NavigationRepository extends NavigationAbstractRepository {
         });
     }
 
+    /**
+     * Returns tree with network data using Resource Timing API 
+     * https://developer.mozilla.org/en-US/docs/Web/API/Performance_API/Resource_timing
+     */
     private createNetworkGroup(data: Navigation): TimerNodeModel {
         const networkGroup = new TimerNodeModel({
             name: 'network',
@@ -73,6 +77,9 @@ export class NavigationRepository extends NavigationAbstractRepository {
             end: data.responseEnd,
         });
 
+        /**
+         * Redirection time 
+         */
         if (isNumber(data.redirectStart) && isNumber(data.redirectEnd)) {
             networkGroup.addChild(new TimerNodeModel({
                 name: 'redirect',
@@ -81,6 +88,9 @@ export class NavigationRepository extends NavigationAbstractRepository {
             }));
         }
 
+        /**
+         * DNS resolving time
+         */
         if (isNumber(data.domainLookupStart) && isNumber(data.domainLookupEnd)) {
             networkGroup.addChild(new TimerNodeModel({
                 name: 'dns',
@@ -89,6 +99,9 @@ export class NavigationRepository extends NavigationAbstractRepository {
             }));
         }
 
+        /**
+         * TCP handshake time
+         */
         if (isNumber(data.domainLookupEnd) && isNumber(data.connectEnd)) {
             networkGroup.addChild(new TimerNodeModel({
                 name: 'tcp',
@@ -97,6 +110,9 @@ export class NavigationRepository extends NavigationAbstractRepository {
             }));
         }
 
+        /**
+         * Service worker processing time
+         */
         if (isNumber(data.requestStart) && isNumber(data.responseStart)) {
             networkGroup.addChild(new TimerNodeModel({
                 name: 'request',
@@ -105,6 +121,9 @@ export class NavigationRepository extends NavigationAbstractRepository {
             }));
         }
 
+        /**
+         * Getting from first to last byte of server response
+         */
         if (isNumber(data.responseStart) && isNumber(data.responseEnd)) {
             networkGroup.addChild(new TimerNodeModel({
                 name: 'response',
@@ -116,6 +135,10 @@ export class NavigationRepository extends NavigationAbstractRepository {
         return networkGroup;
     }
 
+    /**
+     * Returns tree with DOM timings info using Navigation Timing API
+     * https://developer.mozilla.org/en-US/docs/Web/API/Performance_API/Navigation_timing
+     */
     private createDomGroup(data: Navigation): TimerNodeModel {
         const domGroup = new TimerNodeModel({
             name: 'dom',
@@ -123,6 +146,9 @@ export class NavigationRepository extends NavigationAbstractRepository {
             end: data.domComplete,
         });
 
+        /**
+         * DOM construction is finished and interaction with it from JavaScript is possible
+         */
         if (data.responseEnd && data.domInteractive) {
             domGroup.addChild(new TimerNodeModel({
                 name: 'interactive',
@@ -131,6 +157,9 @@ export class NavigationRepository extends NavigationAbstractRepository {
             }));
         }
 
+        /**
+         * HTML document parsing, and  downloading all deferred scripts and executed scripts
+         */
         if (data.domInteractive && data.domContentLoadedEventEnd) {
             domGroup.addChild(new TimerNodeModel({
                 name: 'content-loaded',
@@ -139,6 +168,9 @@ export class NavigationRepository extends NavigationAbstractRepository {
             }));
         }
 
+        /**
+         * Finishing load all sub-resourses
+         */
         if (data.domContentLoadedEventEnd && data.domComplete) {
             domGroup.addChild(new TimerNodeModel({
                 name: 'complete',
@@ -147,6 +179,9 @@ export class NavigationRepository extends NavigationAbstractRepository {
             }));
         }
 
+        /**
+         * All time for dom actions
+         */
         if (data.responseEnd && data.domComplete) {
             domGroup.addChild(new TimerNodeModel({
                 name: 'dom-ready',

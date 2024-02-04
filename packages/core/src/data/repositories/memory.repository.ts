@@ -16,14 +16,23 @@ export class MemoryRepository extends MemoryAbstractRepository {
                     name: 'js',
                     value: 0,
                     children: [
+                        /**
+                         * The maximum size of the heap, in bytes, that is available to the context.
+                         */
                         new MemoryNodeModel({
                             name: 'jsHeapSizeLimit',
                             value: memory.jsHeapSizeLimit,
                         }),
+                        /**
+                         * The total allocated heap size, in bytes.
+                         */
                         new MemoryNodeModel({
                             name: 'totalJSHeapSize',
                             value: memory.totalJSHeapSize,
                         }),
+                        /**
+                         * The currently active segment of JS heap, in bytes.
+                         */
                         new MemoryNodeModel({
                             name: 'usedJSHeapSize',
                             value: memory.usedJSHeapSize,
