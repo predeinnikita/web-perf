@@ -1,12 +1,12 @@
-import { FpsAbstractRepository, FpsNodeModel, PERFORMANCE } from '../../domain';
+import { FpsNodeModel, PERFORMANCE } from '../../domain';
 import { timeInMsToString } from '../../../../../libs/utils/time-in-ms-to-string';
+import { FpsAbstractService } from "../../domain";
 
 export interface FpsRepositoryData {
-    handler?: (fps: FpsNodeModel) => void;
     interval?: number;
 }
 
-export class FpsRepository extends FpsAbstractRepository {
+export class FpsService extends FpsAbstractService {
     private startPaintCount: number = 0;
     private prevElementLeft: number = -1;
     private startIntervalTime = 0;
@@ -14,7 +14,6 @@ export class FpsRepository extends FpsAbstractRepository {
     private paintCount: number = 0;
     private readonly startTime: number;
     private readonly element: HTMLElementTagNameMap["div"];
-    private readonly handler?: (result: FpsNodeModel) => void;
     private readonly interval?: number;
     private readonly stats: FpsNodeModel;
 
@@ -22,9 +21,6 @@ export class FpsRepository extends FpsAbstractRepository {
         data?: FpsRepositoryData
     ) {
         super();
-        if (data?.handler) {
-            this.handler = data.handler;
-        }
         if (data?.interval) {
             this.interval = data.interval;
         }
@@ -37,7 +33,7 @@ export class FpsRepository extends FpsAbstractRepository {
         });
     }
 
-    public run(): void {
+    public run(cb: (fps: FpsNodeModel) => void): void {
         document.body.appendChild(this.element);
         setTimeout(() => this.measure(), 0);
 
@@ -50,7 +46,7 @@ export class FpsRepository extends FpsAbstractRepository {
                     Math.min(Math.round(frames * 1000 / duration), 60)
                 )
             )
-            this.handler(this.generateResult());
+            cb(this.generateResult());
             this.measure();
         }, false);
     }

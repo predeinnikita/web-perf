@@ -1,5 +1,5 @@
-import { TimerNodeModel } from '../models';
+import {NodeModel} from '../models';
 
 export abstract class PrintAbstractService {
-    public abstract print(data: TimerNodeModel): void;
+    public abstract print(data: NodeModel): void;
 }

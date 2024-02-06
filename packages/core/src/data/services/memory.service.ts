@@ -1,6 +1,7 @@
-import { MemoryAbstractRepository, MemoryNodeModel } from '../../domain';
+import { MemoryAbstractService } from "../../domain";
+import { MemoryNodeModel } from "../../domain";
 
-export class MemoryRepository extends MemoryAbstractRepository {
+export class MemoryService extends MemoryAbstractService {
     getInfo(): MemoryNodeModel | null {
         // TODO: performance.memory is deprecated
         const memory = (performance as any).memory;

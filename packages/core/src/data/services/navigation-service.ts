@@ -1,4 +1,4 @@
-import { PERFORMANCE, TimerNodeModel, NavigationAbstractRepository } from '../../domain';
+import { NavigationAbstractService, PERFORMANCE, TimerNodeModel } from '../../domain';
 
 export type Navigation = Partial<{
     activationStart: number,
@@ -43,26 +43,24 @@ export type Navigation = Partial<{
 
 const isNumber = (value: any) => typeof value === 'number';
 
-export class NavigationRepository extends NavigationAbstractRepository {
-    public getInfo(): Promise<TimerNodeModel> {
-        return new Promise<TimerNodeModel>(resolve => {
-            window.addEventListener('load', () => {
-                const [entry] = PERFORMANCE.getEntriesByType("navigation");
-                const data = entry.toJSON() as Navigation;
+export class NavigationService extends NavigationAbstractService {
+    public getInfo(cb: (node: TimerNodeModel) => void): void {
+        window.addEventListener('load', () => {
+            const [entry] = PERFORMANCE.getEntriesByType("navigation");
+            const data = entry.toJSON() as Navigation;
 
-                const timerNode = new TimerNodeModel({
-                    name: 'navigation',
-                    start: data.redirectStart,
-                    end: data.domComplete,
-                });
-
-                const networkGroup = this.createNetworkGroup(data);
-                const domGroup = this.createDomGroup(data);
-                timerNode.addChild(networkGroup);
-                timerNode.addChild(domGroup)
-
-                resolve(timerNode);
+            const timerNode = new TimerNodeModel({
+                name: 'navigation',
+                start: data.redirectStart,
+                end: data.domComplete,
             });
+
+            const networkGroup = this.createNetworkGroup(data);
+            const domGroup = this.createDomGroup(data);
+            timerNode.addChild(networkGroup);
+            timerNode.addChild(domGroup)
+
+            cb(timerNode);
         });
     }
 

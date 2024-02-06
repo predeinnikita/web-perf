@@ -1,8 +1,8 @@
-import { NodeModel, TimerAbstractRepository } from '../../domain';
 import { TimerNodeModel } from '../../domain';
 import { ErrorMessage } from '../../../../../libs/shared-kernel/error';
+import { TimerAbstractService } from "../../domain";
 
-export class TimerRepository extends TimerAbstractRepository {
+export class TimerService extends TimerAbstractService {
     private nodes: TimerNodeModel[] = [];
 
     /**

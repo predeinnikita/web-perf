@@ -1,6 +1,6 @@
-import { ErrorsAbstractRepository } from '../../domain/repositories';
+import {ErrorsAbstractService } from "../../domain";
 
-export class ErrorsRepository extends ErrorsAbstractRepository {
+export class ErrorsService extends ErrorsAbstractService {
     public registerErrorLogger(errorHandler: (error: string | Event) => void): void {
         window.onerror = (e) => {
             errorHandler(e);

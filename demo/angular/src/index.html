@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Angular</title>
+  <script>
+    window.WPMC = {
+      broken: true,
+      initStart: performance.now(),
+    }
+
+    const TIMEOUT = 3 * 1000;
+    setTimeout(() => {
+      if (window.WPMC.broken) {
+        console.error('broken');
+      }
+    }, TIMEOUT);
+
+  </script>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
