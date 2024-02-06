@@ -1,14 +1,24 @@
 import { MemoryAbstractService } from "../../domain";
 import { MemoryNodeModel } from "../../domain";
 
+export interface MemoryServiceOptions {
+    interval: number;
+}
+
 export class MemoryService extends MemoryAbstractService {
-    getInfo(): MemoryNodeModel | null {
+    private readonly interval: number;
+
+    constructor(options?: MemoryServiceOptions) {
+        super();
+        this.interval = options?.interval ? options?.interval : 5 * 1000 * 60;
+    }
+
+    private get info(): MemoryNodeModel {
         // TODO: performance.memory is deprecated
         const memory = (performance as any).memory;
         if (!memory) {
             return null;
         }
-
         return new MemoryNodeModel({
             name: 'memory',
             value: 0,
@@ -42,5 +52,12 @@ export class MemoryService extends MemoryAbstractService {
                 }),
             ]
         });
+    }
+
+    public getInfo(cb: (node: MemoryNodeModel) => void): void {
+        cb(this.info);
+        setInterval(() => {
+            cb(this.info)
+        }, this.interval);
     }
 }
