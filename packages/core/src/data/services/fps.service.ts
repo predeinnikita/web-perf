@@ -1,5 +1,4 @@
 import { FpsNodeModel, PERFORMANCE } from '../../domain';
-import { timeInMsToString } from '../../../../../libs/utils/time-in-ms-to-string';
 import { FpsAbstractService } from "../../domain";
 
 export interface FpsRepositoryData {
@@ -166,4 +165,16 @@ export class FpsService extends FpsAbstractService {
 
         return (sorted[sorted.length / 2].result + sorted[sorted.length / 2 - 1].result) / 2;
     }
+}
+
+const timeInMsToString = (timeInMs: number) => {
+    if (timeInMs >= 60 * 1000) {
+        return `${(timeInMs / 60000).toFixed()}min`
+    }
+
+    if (timeInMs >= 1000) {
+        return `${(timeInMs / 1000).toFixed()}s`
+    }
+
+    return `${timeInMs.toFixed()}ms`
 }

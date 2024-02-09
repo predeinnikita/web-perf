@@ -4,3 +4,4 @@ export * from './fps.service';
 export * from './memory.service'
 export * from './navigation.service';
 export * from './timer.service';
+export * from './metrics-store.service';

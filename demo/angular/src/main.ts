@@ -1,20 +1,13 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
-import { WebPerf } from '../../../packages/core/src/web-perf'
-import {TimerNodeModel} from "../../../packages/core/src";
+import { WebPerf } from 'core/src/web-perf'
+import { TimerNodeModel } from "core/src";
+// import { YandexMetricsService } from "yandex/src";
 
-declare global {
-  interface Window {
-    WPMC: {
-      broken: boolean,
-      initStart: number,
-      bootstrapStart: number,
-      bootstrapEnd: number,
-    }
-  }
-}
-const webPerf = new WebPerf();
+const webPerf = new WebPerf({
+  // metricsService: new YandexMetricsService()
+});
 const { WPMC } = window;
 WPMC.bootstrapStart = performance.now();
 

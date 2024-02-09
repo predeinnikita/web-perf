@@ -1,5 +1,4 @@
 import { TimerNodeModel } from '../../domain';
-import { ErrorMessage } from '../../../../../libs/shared-kernel/error';
 import { TimerAbstractService } from "../../domain";
 
 export class TimerService extends TimerAbstractService {
@@ -10,7 +9,7 @@ export class TimerService extends TimerAbstractService {
      */
     public start(name: string, parentName?: string): TimerNodeModel {
         if (this.hasDataModel(name)) {
-            throw Error(ErrorMessage.Exists)
+            throw Error('Node with same name exists')
         }
         const node = new TimerNodeModel({ name, parentName });
         this.add(node, parentName);

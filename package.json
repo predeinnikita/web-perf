@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build:core": "npx nx build core"
+    "build:core": "npx nx build core",
+    "build:yandex": "npx nx build yandex"
   },
   "private": true,
   "dependencies": {
