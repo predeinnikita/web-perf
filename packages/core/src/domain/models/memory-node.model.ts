@@ -4,15 +4,15 @@ export interface MemoryNodeData {
     name: string;
     parentName?: string;
     value: number;
-    children?: NodeModel[];
+    children?: NodeModel<number>[];
 }
 
-export class MemoryNodeModel extends NodeModel {
+export class MemoryNodeModel extends NodeModel<number> {
     public readonly name: string;
     public readonly parentName: string;
     public readonly unit = 'KiB';
     public readonly value: number;
-    public children?: NodeModel[];
+    public children?: NodeModel<number>[];
 
     public get result(): number {
         return this.value;

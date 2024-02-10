@@ -2,6 +2,7 @@ import {
     ErrorsAbstractService,
     FpsAbstractService,
     FpsNodeModel,
+    InfoNodeModel,
     MemoryAbstractService,
     NodeModel,
     PrintAbstractService,
@@ -23,11 +24,11 @@ export class WebPerf {
     private readonly printService: PrintAbstractService;
     private readonly fpsService: FpsAbstractService;
     private readonly errorService: ErrorsAbstractService;
-
+    private readonly metricsService?: MetricsStoreAbstractService;
     private readonly memoryService: MemoryAbstractService = new MemoryService();
     private readonly navigationService: NavigationService = new NavigationService();
+    private readonly history: NodeModel[] = []
 
-    private readonly metricsService?: MetricsStoreAbstractService;
 
     constructor(data?: WebPerfData) {
         this.timerService = data?.timerService ?? new TimerService();
@@ -40,21 +41,30 @@ export class WebPerf {
     public startMonitoring(): void {
         this.errorService.registerErrorLogger((error) => {
             console.log(error);
+            const node = new InfoNodeModel({
+                name: 'error',
+                value: error.toString()
+            })
+            this.printService.print(node);
+            this.sendStats(node);
         });
-        this.fpsService.run((fps: FpsNodeModel) => {
+        this.fpsService.run((fps) => {
             this.printService.print(fps);
+            this.sendStats(fps);
         });
         this.memoryService.getInfo((res) => {
             this.printService.print(res);
+            this.sendStats(res);
         })
         this.navigationService.getInfo((res) => {
             this.printService.print(res);
+            this.sendStats(res);
         });
     }
 
-    public sendStats(stats: NodeModel): void {
+    public sendStats(node: NodeModel): void {
         if (this.metricsService) {
-            this.metricsService.send(stats);
+            this.metricsService.send(node);
         }
     }
 
@@ -76,5 +86,5 @@ export type WebPerfData = {
     printService?: PrintAbstractService,
     fpsService?: FpsAbstractService,
     errorService?: ErrorsAbstractService,
-    metricsService?: any,
+    metricsService?: MetricsStoreAbstractService,
 };

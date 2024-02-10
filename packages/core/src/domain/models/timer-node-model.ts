@@ -7,15 +7,15 @@ export interface TimerNodeData {
     start?: number;
     end?: number;
     value?: number;
-    children?: NodeModel[];
+    children?: NodeModel<number>[];
 }
 
-export class TimerNodeModel extends NodeModel {
+export class TimerNodeModel extends NodeModel<number> {
     public readonly name: string;
     public readonly parentName: string;
     public readonly start: number;
     public readonly unit = 'ms';
-    public children?: NodeModel[];
+    public children?: NodeModel<number>[];
     private end?: number;
 
     public get status(): 'over' | 'pending' {

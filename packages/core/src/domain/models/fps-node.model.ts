@@ -4,15 +4,15 @@ export interface FpsNodeData {
     name: string;
     parentName?: string;
     value: number;
-    children?: NodeModel[];
+    children?: NodeModel<number>[];
 }
 
-export class FpsNodeModel extends NodeModel {
+export class FpsNodeModel extends NodeModel<number> {
     public readonly name: string;
     public readonly parentName: string;
     public readonly unit = 'fps';
     public readonly value: number;
-    public children?: NodeModel[];
+    public children?: NodeModel<number>[];
 
     public get result(): number {
         return this.value;

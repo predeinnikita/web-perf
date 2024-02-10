@@ -17,10 +17,10 @@
     // "Go to Definition" in VSCode
     "declarationMap": true,
     "paths": {
-      "@core": [
+      "core": [
         "packages/core/src/index.ts"
       ],
-      "@yandex": [
+      "yandex": [
         "packages/yandex/src/index.ts"
       ]
     }
