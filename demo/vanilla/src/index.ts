@@ -1,5 +1,6 @@
 import {WebPerf} from "../../../packages/core/src/web-perf";
 import {YandexMetricsService} from '../../../packages/yandex/src';
+import {InfoNodeModel, NodeModel} from "core/src";
 
 
 const wepPerf = new WebPerf({
@@ -10,3 +11,7 @@ const wepPerf = new WebPerf({
 wepPerf.startMonitoring();
 // wepPerf.sendStats();
 
+
+// setInterval(() => {
+//     throw new Error('some error');
+// }, 5000)

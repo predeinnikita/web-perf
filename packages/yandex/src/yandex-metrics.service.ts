@@ -1,32 +1,34 @@
 import {MetricsStoreAbstractService, NodeModel} from 'core'
 
+declare const ym: (id: number, method: 'params', params: object) => void;
+
 export interface YandexMetricsOptions {
     id: number,
 }
 
 export class YandexMetricsService extends MetricsStoreAbstractService {
-    private readonly id: string;
+    private readonly id: number;
 
     constructor(options: YandexMetricsOptions) {
         super();
         if (!options.id) {
             throw new Error('Id is required for YandexMetricsService');
         }
-        this.id = options.id.toString();
+        this.id = options.id;
     }
 
     public send(node: NodeModel): void {
-        if (!(window as any).ym) {
+        if (!ym) {
             throw new Error('Yandex Metrica not installed');
         }
         const params = this.nodeToParams(node);
         console.log(params);
-        (window as any).ym(this.id, 'params', { params });
+        ym(this.id, 'params', params);
     }
 
     private nodeToParams(node: NodeModel, isChild: boolean = false): any {
         if (!node.children?.length) {
-            return node.result;
+            return isChild ? node.result : { [node.name]: node.result };
         } else {
             const params: any = {};
             if (!isChild) {

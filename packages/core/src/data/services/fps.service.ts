@@ -5,6 +5,8 @@ export interface FpsRepositoryData {
     interval?: number;
 }
 
+const ANIMATION_TIME = 3 * 1000;
+
 export class FpsService extends FpsAbstractService {
     private startPaintCount: number = 0;
     private prevElementLeft: number = -1;
@@ -35,6 +37,8 @@ export class FpsService extends FpsAbstractService {
     public run(cb: (fps: FpsNodeModel) => void): void {
         document.body.appendChild(this.element);
         setTimeout(() => this.measure(), 0);
+        const startTime = performance.now();
+        let count = 0;
 
         this.element.addEventListener('transitionend', () => {
             const duration = PERFORMANCE.now() - this.startIntervalTime;
@@ -45,7 +49,10 @@ export class FpsService extends FpsAbstractService {
                     Math.min(Math.round(frames * 1000 / duration), 60)
                 )
             )
-            cb(this.generateResult());
+            if ((performance.now() - startTime) / this.interval > count) {
+                cb(this.generateResult());
+                count++;
+            }
             this.measure();
         }, false);
     }
@@ -63,7 +70,7 @@ export class FpsService extends FpsAbstractService {
     }
 
     private createElement(): HTMLElementTagNameMap["div"] {
-        const rate = this.interval ?? 1000;
+        const rate = ANIMATION_TIME;
         const element = document.createElement('div');
         element.id = 'FPS';
         element.style.position = 'absolute';

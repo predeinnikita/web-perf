@@ -1,9 +1,8 @@
 import {
     ErrorsAbstractService,
     FpsAbstractService,
-    FpsNodeModel,
-    InfoNodeModel,
     MemoryAbstractService,
+    NavigationAbstractService,
     NodeModel,
     PrintAbstractService,
     TimerAbstractService,
@@ -17,7 +16,7 @@ import {
     PrintService,
     TimerService
 } from "./data";
-import {MetricsStoreAbstractService} from "./domain/services/metrics-store.service";
+import {MetricsStoreAbstractService} from "./domain";
 
 export class WebPerf {
     private readonly timerService: TimerAbstractService;
@@ -26,27 +25,21 @@ export class WebPerf {
     private readonly errorService: ErrorsAbstractService;
     private readonly metricsService?: MetricsStoreAbstractService;
     private readonly memoryService: MemoryAbstractService = new MemoryService();
-    private readonly navigationService: NavigationService = new NavigationService();
+    private readonly navigationService: NavigationAbstractService = new NavigationService();
     private readonly history: NodeModel[] = []
-
 
     constructor(data?: WebPerfData) {
         this.timerService = data?.timerService ?? new TimerService();
         this.printService = data?.printService ?? new PrintService();
         this.errorService = data?.errorService ?? new ErrorsService();
-        this.fpsService = data?.fpsService ?? new FpsService({ interval: 3 * 1000 });
+        this.fpsService = data?.fpsService ?? new FpsService({ interval: 10 * 1000 });
         this.metricsService = data?.metricsService ?? undefined;
     }
 
     public startMonitoring(): void {
         this.errorService.registerErrorLogger((error) => {
-            console.log(error);
-            const node = new InfoNodeModel({
-                name: 'error',
-                value: error.toString()
-            })
-            this.printService.print(node);
-            this.sendStats(node);
+            this.printService.print(error);
+            this.sendStats(error);
         });
         this.fpsService.run((fps) => {
             this.printService.print(fps);
