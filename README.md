@@ -5,6 +5,12 @@ Library for collecting performance and errors data.
 
 ### core
 Package with base classes for collecting and send performance and error data.
+Using this package you can collect data about: 
+- Used memory
+- Navigation Timing
+- FPS
+- Runtime errors
+- Custom time measurements
 
 ### yandex
 Install this package if you want to send collected data to Yandex.Metrica.
@@ -24,6 +30,19 @@ Create WebPerf and start monitoring:
 ```ts
 const wepPerf = new WebPerf();
 wepPerf.startMonitoring();
+```
+
+Custom time measurements:
+```ts
+const wepPerf = new WebPerf()
+webPerf.start('group_1');
+webPerf.start('sub_group_1', 'group_1');
+webPerf.start('sub_group_2', 'group_1');
+webPerf.stop('sub_group_2');
+// Method stop() stops group and all child groups
+setTimeout(() => {
+    webPerf.stop('group_1');
+}, 2000)
 ```
 
 If you want to send data to Yandex.Metrica:
