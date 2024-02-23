@@ -48,12 +48,10 @@ setTimeout(() => {
 If you want to send data to Yandex.Metrica:
 
 ```ts
-const yandexMetricsService = new YandexMetricsService({
-    id: YANDEX_METRICA_ID,
-});
-
 const wepPerf = new WebPerf({
-    metricsService: yandexMetricsService
+    metricsService: new YandexMetricsService({
+        id: YANDEX_METRICA_ID,
+    }),
 });
 
 wepPerf.startMonitoring();
@@ -78,10 +76,8 @@ class SomeMetricsService extends MetricsStoreAbstractService {
     }
 }
 
-const someMetricsService = new SomeMetricsService();
-
 const wepPerf = new WebPerf({
-    metricsService: someMetricsService
+    metricsService: new SomeMetricsService()
 });
 
 wepPerf.startMonitoring();
