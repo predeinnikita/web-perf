@@ -26,7 +26,7 @@ export class WebPerf {
     private readonly metricsService?: MetricsStoreAbstractService;
     private readonly memoryService: MemoryAbstractService = new MemoryService();
     private readonly navigationService: NavigationAbstractService = new NavigationService();
-    private readonly history: NodeModel[] = []
+    private readonly history: NodeModel[] = [];
 
     constructor(data?: WebPerfData) {
         this.timerService = data?.timerService ?? new TimerService();
@@ -37,22 +37,14 @@ export class WebPerf {
     }
 
     public startMonitoring(): void {
-        this.errorService.registerErrorLogger((error) => {
-            this.printService.print(error);
-            this.sendStats(error);
-        });
-        this.fpsService.run((fps) => {
-            this.printService.print(fps);
-            this.sendStats(fps);
-        });
-        this.memoryService.getInfo((res) => {
-            this.printService.print(res);
-            this.sendStats(res);
-        })
-        this.navigationService.getInfo((res) => {
-            this.printService.print(res);
-            this.sendStats(res);
-        });
+        const callback = (node: NodeModel) => {
+            this.printService.print(node);
+            this.sendStats(node);
+        };
+        this.errorService.registerErrorLogger(callback);
+        this.fpsService.run(callback);
+        this.memoryService.getInfo(callback)
+        this.navigationService.getInfo(callback);
     }
 
     public sendStats(node: NodeModel): void {

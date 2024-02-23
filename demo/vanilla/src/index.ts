@@ -1,17 +1,14 @@
 import {WebPerf} from "../../../packages/core/src/web-perf";
 import {YandexMetricsService} from '../../../packages/yandex/src';
-import {InfoNodeModel, NodeModel} from "core/src";
 
+const YANDEX_METRICA_ID = 96422324;
+
+const yandexMetricsService = new YandexMetricsService({
+    id: YANDEX_METRICA_ID,
+});
 
 const wepPerf = new WebPerf({
-    metricsService: new YandexMetricsService({
-        id: 96422324,
-    })
+    metricsService: yandexMetricsService
 });
+
 wepPerf.startMonitoring();
-// wepPerf.sendStats();
-
-
-// setInterval(() => {
-//     throw new Error('some error');
-// }, 5000)

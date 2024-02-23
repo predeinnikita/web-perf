@@ -11,9 +11,6 @@ export class YandexMetricsService extends MetricsStoreAbstractService {
 
     constructor(options: YandexMetricsOptions) {
         super();
-        if (!options.id) {
-            throw new Error('Id is required for YandexMetricsService');
-        }
         this.id = options.id;
     }
 
@@ -22,7 +19,6 @@ export class YandexMetricsService extends MetricsStoreAbstractService {
             throw new Error('Yandex Metrica not installed');
         }
         const params = this.nodeToParams(node);
-        console.log(params);
         ym(this.id, 'params', params);
     }
 
