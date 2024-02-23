@@ -4,10 +4,10 @@ Library for collecting performance and errors data.
 ## Packages
 
 ### core
-Package with base classes for collecting and send performance and error data
+Package with base classes for collecting and send performance and error data.
 
 ### yandex
-Install this package if you want to send collected data to Yandex.Metrica
+Install this package if you want to send collected data to Yandex.Metrica.
 
 ### influx
 In process...
@@ -20,13 +20,13 @@ In process...
 
 ## Quick start
 
-Create WebPerf and start monitoring
+Create WebPerf and start monitoring:
 ```ts
 const wepPerf = new WebPerf();
 wepPerf.startMonitoring();
 ```
 
-if you want to send data to Yandex.Metrica
+If you want to send data to Yandex.Metrica:
 
 ```ts
 const yandexMetricsService = new YandexMetricsService({
@@ -51,7 +51,7 @@ type WebPerfData = {
 };
 ```
 
-For sending data to other services you need to define child of MetricsStoreAbstractService
+For sending data to other services you need to define child of MetricsStoreAbstractService:
 ```ts
 class SomeMetricsService extends MetricsStoreAbstractService {
     public send(node: NodeModel): void {
