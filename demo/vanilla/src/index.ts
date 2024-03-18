@@ -1,14 +1,15 @@
 import {WebPerf} from "../../../packages/core/src/web-perf";
-import {YandexMetricsService} from '../../../packages/yandex/src';
+import {InfluxService} from '../../../packages/influx/src';
 
-const YANDEX_METRICA_ID = 96422324;
-
-const yandexMetricsService = new YandexMetricsService({
-    id: YANDEX_METRICA_ID,
+const influxService = new InfluxService({
+    url: 'http://localhost:8086/',
+    token: 'pmsigjYVG8aV0fUjJPPGXKxRCljv7zAFjRsznknW2Nct6xsO2mT0kF4jUyWlzNkXfpFAheIAGodQl3QZF9xYHg==',
+    org: 'profitbase',
+    bucket: 'test',
 });
 
 const wepPerf = new WebPerf({
-    metricsService: yandexMetricsService
+    metricsService: influxService
 });
 
 wepPerf.startMonitoring();

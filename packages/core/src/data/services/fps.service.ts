@@ -13,10 +13,8 @@ export class FpsService extends FpsAbstractService {
     private startIntervalTime = 0;
     private rafId = 0;
     private paintCount: number = 0;
-    private readonly startTime: number;
     private readonly element: HTMLElementTagNameMap["div"];
     private readonly interval?: number;
-    private readonly stats: FpsNodeModel;
 
     constructor(
         data?: FpsRepositoryData
@@ -27,11 +25,6 @@ export class FpsService extends FpsAbstractService {
         }
 
         this.element = this.createElement();
-        this.startTime = PERFORMANCE.now();
-        this.stats = new FpsNodeModel({
-            name: 'FPS',
-            value: 0,
-        });
     }
 
     public run(cb: (fps: FpsNodeModel) => void): void {
@@ -44,13 +37,12 @@ export class FpsService extends FpsAbstractService {
             const duration = PERFORMANCE.now() - this.startIntervalTime;
             const frames = this.paintCount - this.startPaintCount;
             cancelAnimationFrame(this.rafId);
-            this.stats.addChild(
-                this.createSnapshot(
-                    Math.min(Math.round(frames * 1000 / duration), 60)
-                )
-            )
             if ((performance.now() - startTime) / this.interval > count) {
-                cb(this.generateResult());
+                cb(
+                    this.createSnapshot(
+                        Math.min(Math.round(frames * 1000 / duration), 60)
+                    )
+                );
                 count++;
             }
             this.measure();
@@ -64,7 +56,7 @@ export class FpsService extends FpsAbstractService {
 
     private createSnapshot(fps: number): FpsNodeModel {
         return new FpsNodeModel({
-            name: `snapshot ${timeInMsToString(PERFORMANCE.now() - this.startTime)}`,
+            name: `FPS`,
             value: fps,
         });
     }
@@ -103,74 +95,6 @@ export class FpsService extends FpsAbstractService {
         }
 
         this.rafId = requestAnimationFrame(() => this.saveValue());
-    }
-
-    private generateResult(): FpsNodeModel {
-        const result = new FpsNodeModel({
-            name: `fps(${timeInMsToString(PERFORMANCE.now() - this.startTime)})`,
-            value: 0,
-        })
-
-        const minFps = this.getMinFps();
-        const maxFps = this.getMaxFps();
-        const average = this.getAverageFps();
-        const median = this.getMedianFps();
-
-        result.addChild(new FpsNodeModel({
-            name: 'min',
-            value: minFps
-        }));
-
-        result.addChild(new FpsNodeModel({
-            name: 'max',
-            value: maxFps
-        }));
-
-        result.addChild(new FpsNodeModel({
-            name: 'average',
-            value: average
-        }));
-
-        result.addChild(new FpsNodeModel({
-            name: 'median',
-            value: median
-        }));
-
-        return result;
-    }
-
-    private getMinFps(): number | null {
-        const minFps = this.stats.children.reduce((prev, current) => {
-            return prev < current.result ? prev : current.result;
-        }, 61);
-
-        return minFps <= 60 ? minFps : null;
-    }
-
-    private getMaxFps(): number | null {
-        const maxFps = this.stats.children.reduce((prev, current) => {
-            return prev > current.result ? prev : current.result;
-        }, -1);
-
-        return maxFps >= 0 ? maxFps : null;
-    }
-
-    private getAverageFps(): number | null {
-        const sum = this.stats.children.reduce((prev, current) => {
-            return prev + current.result;
-        }, 0);
-
-        return sum / this.stats.children.length;
-    }
-
-    private getMedianFps(): number | null {
-        const sorted = this.stats.children.sort((left, right) => left.result - right.result);
-
-        if (sorted.length % 2 === 1) {
-            return sorted[Math.floor(sorted.length / 2)].result;
-        }
-
-        return (sorted[sorted.length / 2].result + sorted[sorted.length / 2 - 1].result) / 2;
     }
 }
 

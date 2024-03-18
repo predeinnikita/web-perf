@@ -1,0 +1,12 @@
+{
+  "name": "influx",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc src/index.ts --outDir dist --declaration"
+  },
+  "dependencies": {
+    "@influxdata/influxdb-client": "^1.33.2",
+    "@influxdata/influxdb-client-apis": "^1.33.2"
+  }
+}

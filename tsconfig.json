@@ -22,6 +22,9 @@
       ],
       "yandex": [
         "packages/yandex/src/index.ts"
+      ],
+      "influx": [
+        "packages/yandex/src/index.ts"
       ]
     }
   },

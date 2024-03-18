@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "build:core": "npx nx build core",
-    "build:yandex": "npx nx build yandex"
+    "build:yandex": "npx nx build yandex",
+    "build:influx": "npx nx build influx"
   },
   "private": true,
   "dependencies": {
