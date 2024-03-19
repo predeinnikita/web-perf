@@ -1,8 +1,16 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {ApplicationConfig, importProvidersFrom} from '@angular/core';
 
-import { routes } from './app.routes';
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
+import {WebPerfModule} from "../../../../packages/ng/projects/ng/src/lib/web-perf/web-perf.module";
+import {
+  RequestMonitoringInterceptor
+} from "../../../../packages/ng/projects/ng/src/lib/web-perf/interceptors/request-monitoring.interceptor";
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes)]
+  providers: [
+    provideHttpClient(
+      withInterceptorsFromDi(),
+    ),
+    importProvidersFrom(WebPerfModule),
+  ]
 };

@@ -5,7 +5,8 @@
   "scripts": {
     "build:core": "npx nx build core",
     "build:yandex": "npx nx build yandex",
-    "build:influx": "npx nx build influx"
+    "build:influx": "npx nx build influx",
+    "build:ng": "npx nx build ng"
   },
   "private": true,
   "dependencies": {

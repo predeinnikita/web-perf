@@ -1,6 +1,6 @@
 export abstract class NodeModel<T=any> {
-    public abstract readonly name: string;
-    public abstract readonly parentName: string;
+    public abstract name: string;
+    public abstract parentName?: string;
     public abstract readonly unit: 'ms' | 'KiB' | 'fps' | 'none';
     public abstract children?: NodeModel<T>[];
 
@@ -11,7 +11,7 @@ export abstract class NodeModel<T=any> {
     }
 
     public hasChild(name: string): boolean {
-        return this.children?.some(node => node.name === name || node.hasChild(name));
+        return !!this.children?.some(node => node.name === name || node.hasChild(name));
     }
 
     public addChild(node: NodeModel<T>): void {

@@ -23,6 +23,8 @@ export class PrintService extends PrintAbstractService {
                 return '💾';
             case 'ms':
                 return '⏲';
+            default:
+                return '';
         }
     }
 }

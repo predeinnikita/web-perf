@@ -11,19 +11,19 @@ export interface TimerNodeData {
 }
 
 export class TimerNodeModel extends NodeModel<number> {
-    public readonly name: string;
-    public readonly parentName: string;
-    public readonly start: number;
-    public readonly unit = 'ms';
+    public name: string;
+    public parentName?: string;
+    public start: number;
     public children?: NodeModel<number>[];
     private end?: number;
+    public readonly unit = 'ms';
 
     public get status(): 'over' | 'pending' {
         return this.end ? 'over' : 'pending';
     }
 
     public get result(): number {
-        return this.end - this.start;
+        return Number(this.end) - Number(this.start);
     }
 
     constructor(data: TimerNodeData) {

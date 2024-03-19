@@ -9,6 +9,7 @@
     // This compiler run should
     // only output d.ts files
     "emitDeclarationOnly": true,
+    "strict": true,
     // Types should go into this directory.
     // Removing this would place the .d.ts files
     // next to the .js files
@@ -25,6 +26,9 @@
       ],
       "influx": [
         "packages/yandex/src/index.ts"
+      ],
+      "ng": [
+        "packages/ng/projects/ng/src/index.ts"
       ]
     }
   },

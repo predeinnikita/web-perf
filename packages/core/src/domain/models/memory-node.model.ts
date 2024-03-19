@@ -8,11 +8,11 @@ export interface MemoryNodeData {
 }
 
 export class MemoryNodeModel extends NodeModel<number> {
-    public readonly name: string;
-    public readonly parentName: string;
-    public readonly unit = 'KiB';
-    public readonly value: number;
+    public name: string;
+    public parentName?: string;
+    public value: number;
     public children?: NodeModel<number>[];
+    public readonly unit = 'KiB';
 
     public get result(): number {
         return this.value;

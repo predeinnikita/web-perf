@@ -37,7 +37,7 @@ export class FpsService extends FpsAbstractService {
             const duration = PERFORMANCE.now() - this.startIntervalTime;
             const frames = this.paintCount - this.startPaintCount;
             cancelAnimationFrame(this.rafId);
-            if ((performance.now() - startTime) / this.interval > count) {
+            if ((performance.now() - startTime) / Number(this.interval) > count) {
                 cb(
                     this.createSnapshot(
                         Math.min(Math.round(frames * 1000 / duration), 60)

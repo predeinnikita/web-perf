@@ -57,11 +57,11 @@ export class WebPerf {
         this.printService.print(node);
     }
 
-    public startTime(name: string, parentName: string): TimerNodeModel {
+    public startTime(name: string, parentName?: string): TimerNodeModel {
         return this.timerService.start(name, parentName)
     }
 
-    public stopTime(name: string): TimerNodeModel {
+    public stopTime(name: string): TimerNodeModel | null {
         return this.timerService.stop(name);
     }
 }

@@ -9,7 +9,7 @@ export interface IInfoNodeModel {
 
 export class InfoNodeModel extends NodeModel<string> {
     public name: string;
-    public parentName: string;
+    public parentName?: string;
     public readonly unit = 'none';
     public children?: NodeModel[];
     private value: string;
