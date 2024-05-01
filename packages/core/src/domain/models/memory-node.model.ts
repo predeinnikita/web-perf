@@ -12,7 +12,7 @@ export class MemoryNodeModel extends NodeModel<number> {
     public parentName?: string;
     public value: number;
     public children?: NodeModel<number>[];
-    public readonly unit = 'KiB';
+    public readonly unit = 'byte';
 
     public get result(): number {
         return this.value;

@@ -6,10 +6,6 @@ import {CommonModule} from "@angular/common";
 
 @Component({
   selector: 'app-todos',
-  standalone: true,
-  imports: [
-    CommonModule
-  ],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.scss'
 })
@@ -21,6 +17,7 @@ export class TodosComponent {
   private injector: Injector  = inject(Injector);
 
   constructor() {
+    this.httpClient.get<any>('https://dummyjson.com/todos').subscribe(() => console.log('https://dummyjson.com/todos'))
     this.todos = toSignal(
       interval(2000).pipe(
         tap(() => this.loading.set(true)),

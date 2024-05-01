@@ -1,7 +1,7 @@
 export abstract class NodeModel<T=any> {
-    public abstract name: string;
-    public abstract parentName?: string;
-    public abstract readonly unit: 'ms' | 'KiB' | 'fps' | 'none';
+    public abstract name: string | Symbol;
+    public abstract parentName?: string | Symbol;
+    public abstract readonly unit: 'ms' | 'byte' | 'fps' | 'none';
     public abstract children?: NodeModel<T>[];
 
     public abstract get result(): T;
@@ -10,7 +10,7 @@ export abstract class NodeModel<T=any> {
         return !!this.parentName;
     }
 
-    public hasChild(name: string): boolean {
+    public hasChild(name: string | Symbol): boolean {
         return !!this.children?.some(node => node.name === name || node.hasChild(name));
     }
 

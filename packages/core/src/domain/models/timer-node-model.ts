@@ -2,8 +2,8 @@ import { PERFORMANCE } from '../consts';
 import { NodeModel } from './node.base-model';
 
 export interface TimerNodeData {
-    name: string;
-    parentName?: string;
+    name: string | Symbol;
+    parentName?: string | Symbol;
     start?: number;
     end?: number;
     value?: number;
@@ -11,8 +11,8 @@ export interface TimerNodeData {
 }
 
 export class TimerNodeModel extends NodeModel<number> {
-    public name: string;
-    public parentName?: string;
+    public name: string | Symbol;
+    public parentName?: string | Symbol;
     public start: number;
     public children?: NodeModel<number>[];
     private end?: number;

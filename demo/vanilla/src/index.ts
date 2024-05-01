@@ -8,8 +8,13 @@ const influxService = new InfluxService({
     bucket: 'test',
 });
 
-const wepPerf = new WebPerf({
+const webPerf: WebPerf = new WebPerf({
     metricsService: influxService
 });
 
-wepPerf.startMonitoring();
+webPerf.startMonitoring();
+
+setTimeout(() => {
+    window.location.reload();
+}, 3_600_000)
+

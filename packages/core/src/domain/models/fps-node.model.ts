@@ -12,7 +12,7 @@ export class FpsNodeModel extends NodeModel<number> {
     public parentName?: string;
     public value: number;
     public children?: NodeModel<number>[];
-    public readonly unit = 'KiB';
+    public readonly unit = 'fps';
 
     public get result(): number {
         return this.value;

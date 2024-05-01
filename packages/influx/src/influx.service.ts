@@ -1,4 +1,4 @@
-import {MetricsStoreAbstractService, NodeModel} from 'core'
+import { MetricsStoreAbstractService, NodeModel } from 'core'
 import {InfluxDB, Point, WriteApi} from '@influxdata/influxdb-client'
 
 export interface InfluxOptions {
@@ -18,7 +18,7 @@ export class InfluxService extends MetricsStoreAbstractService {
     }
 
     public send(node: NodeModel): void {
-        const point = new Point(node.name);
+        const point = new Point(this.getNameFrom(node.name));
         this.fillPoint(point, node);
         this.influxDB.writePoint(point);
     }
@@ -30,8 +30,14 @@ export class InfluxService extends MetricsStoreAbstractService {
             }
         } else {
             point.tag('unit', node.unit);
-            point.floatField(node.name, node.result);
+            point.floatField(this.getNameFrom(node.name), node.result);
             point.timestamp(new Date());
         }
+    }
+
+    private getNameFrom(name: string | Symbol): string {
+        return typeof name === 'string'
+            ? name
+            : String(name.description);
     }
 }
