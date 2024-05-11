@@ -3,7 +3,7 @@ Library for collecting performance and errors data.
 
 ## Packages
 
-### core
+### web-perf
 Package with base classes for collecting and send performance and error data.
 Using this package you can collect data about: 
 - Used memory
