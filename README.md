@@ -3,26 +3,28 @@ Library for collecting performance and errors data.
 
 ## Packages
 
-### web-perf
+### WebPerf/Core
 Package with base classes for collecting and send performance and error data.
-Using this package you can collect data about: 
+Using this package you can collect data about:
+
 - Used memory
-- Navigation Timing
+- Navigation TimingA
 - FPS
 - Runtime errors
+- User-Agent
 - Custom time measurements
 
-### yandex
-Install this package if you want to send collected data to Yandex.Metrica.
+### WebPerf/yandex
+Package with integrations with Yandex.Metrica. You can connect this package to WebPerf and save collected data in Yandex.Metrica.
+More about Yandex.Metrica integration you can see [here](packages/yandex/README.md).
 
-### influx
-In process...
+### WebPerf/influx
+Package with integrations with InfluxDB. You can connect this package to WebPerf and save collected data in InfluxDB.
+More about InfluxDB integration you can see [here](packages/influx/README.md).
 
-### angular
-In process...
-
-### react
-In process...
+### WebPerf/ng
+Add this package if you are going to connect WebPerf to Angular app. This package has some additional functionality for Angular. Also this package will help you to add providers in your Angular app.
+More about Angular integration you can see [here](packages/web-perf-ng/README.md).
 
 ## Quick start
 
@@ -32,7 +34,7 @@ const wepPerf = new WebPerf();
 wepPerf.startMonitoring();
 ```
 
-Custom time measurements:
+WebPerf gives opportunity to collect custom measurements:
 ```ts
 const wepPerf = new WebPerf()
 webPerf.start('group_1');
@@ -45,30 +47,16 @@ setTimeout(() => {
 }, 2000)
 ```
 
-If you want to send data to Yandex.Metrica:
-
-```ts
-const wepPerf = new WebPerf({
-    metricsService: new YandexMetricsService({
-        id: YANDEX_METRICA_ID,
-    }),
-});
-
-wepPerf.startMonitoring();
-```
-
 WebPerf constructor signature:
 ```ts
 type WebPerfData = {
-    timerService?: TimerAbstractService,
     printService?: PrintAbstractService,
-    fpsService?: FpsAbstractService,
-    errorService?: ErrorsAbstractService,
     metricsService?: MetricsStoreAbstractService,
 };
 ```
 
-For sending data to other services you need to define child of MetricsStoreAbstractService:
+If you need to send collected data to some service you can use [WebPerf/yandex](packages/yandex/README.md) or [WebPerf/influx](packages/influx/README.md).
+To create your own integration you need to create MetricsStoreAbstractService's child class and pass instance to constructor:
 ```ts
 class SomeMetricsService extends MetricsStoreAbstractService {
     public send(node: NodeModel): void {
@@ -81,4 +69,16 @@ const wepPerf = new WebPerf({
 });
 
 wepPerf.startMonitoring();
+```
+
+If you connect MetricsStoreAbstractService to WebPerf then you can send custom collected data:
+```ts
+    const fibonacciGroup = Symbol('Fibonacci');
+
+    const timer = this.webPerfService.startTime(fibonacciGroup);
+    const fibonacciSequence = getFibonacciSequence(30);
+    this.webPerfService.stopTime(fibonacciGroup);
+    
+    webPerf.sendStats(timer);
+    
 ```

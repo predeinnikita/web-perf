@@ -1,27 +1,70 @@
-# Ng
+# WebPerf/ng
+WebPerf + Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.1.
+## Add WebPerf to Angular
+Add WebPerf in your angular project in your main.ts file:
+```ts
+const influx = new InfluxService({
+  url: 'http://localhost:8086/',
+  token: '...',
+  org: 'org',
+  bucket: 'bucket',
+});
 
-## Development server
+const webPerf = WebPerf.init({ metricsService: influx });
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+platformBrowserDynamic(provideWebPerf(webPerf, influx))
+  .bootstrapModule(AppModule)
+  .then(() => webPerf.successBootstrap())
+  .catch(() => webPerf.errorBootstrap())
+  .finally(() => {
+    webPerf.startMonitoring();
+    webPerf.stopBootstrap();
+  });
+```
 
-## Code scaffolding
+Methods successBootstrap, errorBootstrap and stopBootstrap need to detect cases when app crashes in runtime(white screen).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## WebPerf Service
+Also you can use WebPerf as Angular service:
+```ts
+export class AppComponent {
+  public title = 'angular';
 
-## Build
+  private webPerf = inject(WebPerf)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+  public ngOnInit(): void {
+    const initializingGroup = Symbol('Initializing');
+    this.webPerf.startTime(initializingGroup);
 
-## Running unit tests
+    this.initialize().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(() => {
+      const timer = this.webPerf.stopTime(initializingGroup);
+      if (timer) {
+        this.webPerf.sendStats(timer)
+      }
+    })
+  }
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+  private initialize(): Observable<void> {
+    ...
+  }
+}
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Http Interceptor
+Add HTTP_INTERCEPTOR provider to collect data about all http requests:
+```ts
+ providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RequestMonitoringInterceptor,
+      multi: true,
+    }
+  ]
+```
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
