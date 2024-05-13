@@ -1,26 +1,30 @@
 import {HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest} from "@angular/common/http";
-import {finalize, Observable} from "rxjs";
-import {NodeModel, PrintAbstractService, PrintService} from "core";
-import {WebPerfService} from "../services/web-perf.service";
+import {Observable, tap} from 'rxjs';
+import {PrintAbstractService, WebPerf} from 'core';
 import {inject} from "@angular/core";
 
 export const RequestMonitoringInterceptorFn: HttpInterceptorFn = (
   req: HttpRequest<any>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<any>> => {
-  const webPerfService = inject(WebPerfService);
+  const webPerfService = inject(WebPerf);
   const printService = inject(PrintAbstractService);
 
-  const timerNode = webPerfService.startTime('HTTP Request');
-  webPerfService.startTime(req.method, timerNode.name);
-  webPerfService.startTime(req.url, req.method);
-  printService.print(timerNode as NodeModel);
+  const httpRequestGroup = Symbol('HTTP Request');
+  const methodGroup = Symbol(req.method);
+  const urlGroup = Symbol(req.url);
+  const timerNode = webPerfService.startTime(httpRequestGroup);
+  webPerfService.startTime(methodGroup, httpRequestGroup);
+  webPerfService.startTime(urlGroup, methodGroup);
+  printService.print(timerNode);
 
   return next(req).pipe(
-    finalize(() => {
-      timerNode.stop();
-      webPerfService.sendStats(timerNode);
-      printService.print(timerNode as NodeModel);
+    tap(() => {
+      const stats = webPerfService.stopTime(httpRequestGroup);
+      if (stats) {
+        webPerfService.sendStats(stats);
+        printService.print(stats);
+      }
     })
   )
 };

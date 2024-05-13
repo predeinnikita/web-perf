@@ -14,10 +14,5 @@ const webPerf: WebPerf = new WebPerf({
 
 webPerf.startMonitoring();
 
-setTimeout(() => {
-    window.location.reload();
-}, 3_600_000)
-
-
-const mds = new MetadataService();
-webPerf.print(mds.getMetadata());
+const metadataService = new MetadataService();
+webPerf.print(metadataService.getMetadata());

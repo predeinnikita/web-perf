@@ -19,19 +19,7 @@ export class YandexMetricsService extends MetricsStoreAbstractService {
             throw new Error('Yandex Metrica not installed');
         }
         const params = this.nodeToParams(node);
-
-
-
-        ym(this.id, 'params', {
-            load: {
-                js: 200,
-                html: 100,
-                css: 123,
-            }
-        });
-
-
-
+        ym(this.id, 'params', params);
     }
 
     private nodeToParams(node: NodeModel, isChild: boolean = false): any {

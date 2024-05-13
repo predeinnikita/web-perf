@@ -1,5 +1,5 @@
 import {InfoNodeModel, MetricsStoreAbstractService, NodeModel} from 'core'
-import {createFluxTableMetaData, InfluxDB, Point, WriteApi} from '@influxdata/influxdb-client'
+import {InfluxDB, Point, WriteApi} from '@influxdata/influxdb-client'
 
 export interface InfluxOptions {
     url: string;

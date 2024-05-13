@@ -11,7 +11,8 @@ import {
 import {
     ErrorsService,
     FpsService,
-    MemoryService, MetadataService,
+    MemoryService,
+    MetadataService,
     NavigationService,
     PrintService,
     TimerService
@@ -88,8 +89,11 @@ export class WebPerf {
 
     public stopBootstrap(): void {
         const timerNode = this.stopTime(WebPerf.bootstrapGroupName);
-        const additionalInfo = new InfoNodeModel({ name: 'bootstrap-broken', value: '' })
-        if (timerNode) {
+
+        if (this.bootstrapBroken) {
+            const additionalInfo = new InfoNodeModel({ name: 'bootstrap-broken', value: '' });
+            this.sendStats(additionalInfo);
+        } else if (timerNode) {
             this.sendStats(timerNode);
         }
     }

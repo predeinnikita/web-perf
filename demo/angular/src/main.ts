@@ -1,12 +1,12 @@
 import {
   WebPerf
 } from 'core'
-import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
-import { AppModule } from "./app/app.module";
-import { InfluxService } from "influx";
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app/app.module';
+import { InfluxService } from 'influx';
 import {
   provideWebPerf
-} from "../../../packages/web-perf-ng/projects/web-perf-ng/src/lib/web-perf/provide-web-perf.util";
+} from '../../../packages/web-perf-ng/projects/web-perf-ng/src/lib/web-perf/provide-web-perf.util';
 
 const INFLUX_TOKEN = 'pmsigjYVG8aV0fUjJPPGXKxRCljv7zAFjRsznknW2Nct6xsO2mT0kF4jUyWlzNkXfpFAheIAGodQl3QZF9xYHg==';
 
@@ -27,8 +27,3 @@ platformBrowserDynamic(provideWebPerf(webPerf, influx))
     webPerf.startMonitoring();
     webPerf.stopBootstrap();
   });
-
-
-// setTimeout(() => {
-//   window.location.reload();
-// }, 3000)
