@@ -14,4 +14,4 @@ const wepPerf = new WebPerf({
 wepPerf.startMonitoring();
 ```
 
-After that WebPerf will send data to Yandex.Metrica and you can see performance visualization 
+After that WebPerf will send data to Yandex.Metrica and you can see performance visualization.

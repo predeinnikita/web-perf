@@ -15,11 +15,11 @@ Using this package you can collect data about:
 - Custom time measurements
 
 ### WebPerf/yandex
-Package with integrations with Yandex.Metrica. You can connect this package to WebPerf and save collected data in Yandex.Metrica.
+Package with integration with Yandex.Metrica. You can connect this package to WebPerf and save collected data in Yandex.Metrica.
 More about Yandex.Metrica integration you can see [here](packages/yandex/README.md).
 
 ### WebPerf/influx
-Package with integrations with InfluxDB. You can connect this package to WebPerf and save collected data in InfluxDB.
+Package with integration with InfluxDB. You can connect this package to WebPerf and save collected data in InfluxDB.
 More about InfluxDB integration you can see [here](packages/influx/README.md).
 
 ### WebPerf/ng
