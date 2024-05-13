@@ -13,7 +13,7 @@ export class MemoryService extends MemoryAbstractService {
         this.interval = options?.interval ? options?.interval : 5 * 1000 * 60;
     }
 
-    private get info(): MemoryNodeModel {
+    private get info(): MemoryNodeModel | null {
         // TODO: performance.memory is deprecated
         const memory = (performance as any).memory;
         if (!memory) {
@@ -55,9 +55,13 @@ export class MemoryService extends MemoryAbstractService {
     }
 
     public getInfo(cb: (node: MemoryNodeModel) => void): void {
-        cb(this.info);
+        if (this.info) {
+            cb(this.info);
+        }
         setInterval(() => {
-            cb(this.info)
+            if (this.info) {
+                cb(this.info);
+            }
         }, this.interval);
     }
 }

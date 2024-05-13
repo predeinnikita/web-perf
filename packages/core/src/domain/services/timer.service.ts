@@ -1,6 +1,6 @@
 import { TimerNodeModel } from '../models';
 
-export abstract class TimerAbstractService {
-    public abstract start(name: string, parentName?: string): TimerNodeModel;
-    public abstract stop(name: string): TimerNodeModel;
+export abstract class TimerAbstractService<T extends (string | Symbol) = (string | Symbol) > {
+    public abstract start(name: T, parentName?: T): TimerNodeModel;
+    public abstract stop(name: T): TimerNodeModel | null;
 }

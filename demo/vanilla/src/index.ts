@@ -1,5 +1,5 @@
-import {WebPerf} from "../../../packages/core/src/web-perf";
-import {InfluxService} from '../../../packages/influx/src';
+import { WebPerf, MetadataService } from "core";
+import { InfluxService } from 'influx';
 
 const influxService = new InfluxService({
     url: 'http://localhost:8086/',
@@ -8,8 +8,11 @@ const influxService = new InfluxService({
     bucket: 'test',
 });
 
-const wepPerf = new WebPerf({
+const webPerf: WebPerf = new WebPerf({
     metricsService: influxService
 });
 
-wepPerf.startMonitoring();
+webPerf.startMonitoring();
+
+const metadataService = new MetadataService();
+webPerf.print(metadataService.getMetadata());

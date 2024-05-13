@@ -8,11 +8,11 @@ export interface FpsNodeData {
 }
 
 export class FpsNodeModel extends NodeModel<number> {
-    public readonly name: string;
-    public readonly parentName: string;
-    public readonly unit = 'fps';
-    public readonly value: number;
+    public name: string;
+    public parentName?: string;
+    public value: number;
     public children?: NodeModel<number>[];
+    public readonly unit = 'fps';
 
     public get result(): number {
         return this.value;

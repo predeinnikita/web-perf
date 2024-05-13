@@ -1,4 +1,4 @@
-import {MetricsStoreAbstractService, NodeModel} from 'core'
+import {InfoNodeModel, MetricsStoreAbstractService, NodeModel} from 'core'
 import {InfluxDB, Point, WriteApi} from '@influxdata/influxdb-client'
 
 export interface InfluxOptions {
@@ -17,10 +17,23 @@ export class InfluxService extends MetricsStoreAbstractService {
         this.influxDB = new InfluxDB({ url, token }).getWriteApi(org, bucket, 'ns')
     }
 
-    public send(node: NodeModel): void {
-        const point = new Point(node.name);
+    public send(node: NodeModel, metadata?: InfoNodeModel): void {
+        const point = new Point(this.getNameFrom(node.name));
         this.fillPoint(point, node);
+        if (metadata) {
+            this.addMetadata(point, metadata)
+        }
         this.influxDB.writePoint(point);
+    }
+
+    private addMetadata(point: Point, metadata: InfoNodeModel): void {
+        if (metadata.children?.length) {
+            for (const child of metadata.children) {
+                this.addMetadata(point, child as InfoNodeModel);
+            }
+        } else {
+            point.stringField(`meta:${this.getNameFrom(metadata.name)}`, metadata.result);
+        }
     }
 
     private fillPoint(point: Point, node: NodeModel): void {
@@ -30,8 +43,14 @@ export class InfluxService extends MetricsStoreAbstractService {
             }
         } else {
             point.tag('unit', node.unit);
-            point.floatField(node.name, node.result);
+            point.floatField(this.getNameFrom(node.name), node.result);
             point.timestamp(new Date());
         }
+    }
+
+    private getNameFrom(name: string | Symbol): string {
+        return typeof name === 'string'
+            ? name
+            : String(name.description);
     }
 }

@@ -1,43 +1,29 @@
-import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app.component';
-import { WebPerf } from 'core/src/web-perf'
-import { TimerNodeModel } from "core/src";
-// import { YandexMetricsService } from "yandex/src";
+import {
+  WebPerf
+} from 'core'
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app/app.module';
+import { InfluxService } from 'influx';
+import {
+  provideWebPerf
+} from '../../../packages/web-perf-ng/projects/web-perf-ng/src/lib/web-perf/provide-web-perf.util';
 
-const webPerf = new WebPerf({
-  // metricsService: new YandexMetricsService()
+const INFLUX_TOKEN = 'pmsigjYVG8aV0fUjJPPGXKxRCljv7zAFjRsznknW2Nct6xsO2mT0kF4jUyWlzNkXfpFAheIAGodQl3QZF9xYHg==';
+
+const influx = new InfluxService({
+  url: 'http://localhost:8086/',
+  token: INFLUX_TOKEN,
+  org: 'profitbase',
+  bucket: 'test',
 });
-const { WPMC } = window;
-WPMC.bootstrapStart = performance.now();
 
-bootstrapApplication(AppComponent, appConfig)
-  .then(() => {
-    WPMC.bootstrapEnd = performance.now();
-    WPMC.broken = false;
-    console.log(window.WPMC);
-  })
-  .catch((err) => {
-    WPMC.broken = true;
-  })
+const webPerf = WebPerf.init({ metricsService: influx });
+
+platformBrowserDynamic(provideWebPerf(webPerf, influx))
+  .bootstrapModule(AppModule)
+  .then(() => webPerf.successBootstrap())
+  .catch(() => webPerf.errorBootstrap())
   .finally(() => {
-    const node = new TimerNodeModel({
-      name: 'init-app',
-      children: [
-        new TimerNodeModel({
-          name: 'init-page',
-          start: WPMC.initStart,
-          end: WPMC.bootstrapStart,
-        }),
-        new TimerNodeModel({
-          name: 'init-bootstrap',
-          start: WPMC.bootstrapStart,
-          end: WPMC.bootstrapEnd,
-        }),
-      ]
-    })
-
     webPerf.startMonitoring();
-    webPerf.print(node);
-    webPerf.sendStats(node);
+    webPerf.stopBootstrap();
   });

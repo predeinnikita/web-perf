@@ -44,9 +44,10 @@ export type Navigation = Partial<{
 const isNumber = (value: any) => typeof value === 'number';
 
 export class NavigationService extends NavigationAbstractService {
+
     public getInfo(cb: (node: TimerNodeModel) => void): void {
         window.addEventListener('load', () => {
-            const [entry] = PERFORMANCE.getEntriesByType("navigation");
+            const [entry] = PERFORMANCE.getEntriesByType('navigation');
             const data = entry.toJSON() as Navigation;
 
             const timerNode = new TimerNodeModel({
@@ -76,7 +77,7 @@ export class NavigationService extends NavigationAbstractService {
         });
 
         /**
-         * Redirection time 
+         * Redirection time
          */
         if (isNumber(data.redirectStart) && isNumber(data.redirectEnd)) {
             networkGroup.addChild(new TimerNodeModel({

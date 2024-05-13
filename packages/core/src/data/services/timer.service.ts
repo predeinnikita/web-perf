@@ -1,14 +1,14 @@
 import { TimerNodeModel } from '../../domain';
 import { TimerAbstractService } from "../../domain";
 
-export class TimerService extends TimerAbstractService {
-    private nodes: TimerNodeModel[] = [];
+export class TimerService<T extends (string | Symbol) = (string | Symbol)> extends TimerAbstractService<(string | Symbol)> {
+    private nodesMap = new Map<string | Symbol, TimerNodeModel>();
 
     /**
-     * Начать отсчет времени в узле
+     * Start named timer
      */
-    public start(name: string, parentName?: string): TimerNodeModel {
-        if (this.hasDataModel(name)) {
+    public start(name: T, parentName?: T): TimerNodeModel {
+        if (this.nodesMap.has(name)) {
             throw Error('Node with same name exists')
         }
         const node = new TimerNodeModel({ name, parentName });
@@ -18,52 +18,19 @@ export class TimerService extends TimerAbstractService {
     }
 
     /**
-     * Остановить отсчет времени в узле
+     * Stop named timer
      */
-    public stop(name: string): TimerNodeModel | null {
-        const node = this.findNodeWithName(name);
+    public stop(name: T): TimerNodeModel | null {
+        const node = this.nodesMap.get(name) || null;
         node?.stop();
 
         return node;
     }
 
-    /**
-     * Проверка, есть ли узел с заданным именем в дереве
-     */
-    private hasDataModel(name: string): boolean {
-        return this.nodes.some(data => data.name === name || data.hasChild(name));
-    }
-
-    /**
-     * Добавляет узел в дерево. Если указана группа,
-     * то ищет узел с названием groupName и добавляет в его потомки переданный узел
-     */
-    private add(node: TimerNodeModel, parentName?: string): void {
+    private add(node: TimerNodeModel, parentName?: T): void {
         if (parentName) {
-            return this.findNodeWithName(parentName)?.addChild(node);
+            this.nodesMap.get(parentName)?.addChild(node);
         }
-        this.nodes.push(node);
-    }
-
-
-    /**
-     * Рекурсивно находит узел с указанным именем
-     */
-    private findNodeWithName(name: string): TimerNodeModel | null {
-        let node: TimerNodeModel | null = null;
-        const recursiveSearch = (children: TimerNodeModel[]) => {
-            for (let child of children) {
-                if (child.name === name) {
-                    node = child;
-                    return;
-                }
-                if (child.children) {
-                    recursiveSearch(child.children as TimerNodeModel[]);
-                }
-            }
-        }
-        recursiveSearch(this.nodes);
-
-        return node;
+        this.nodesMap.set(node.name, node);
     }
 }
