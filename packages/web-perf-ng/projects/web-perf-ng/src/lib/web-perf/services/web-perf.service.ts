@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { WebPerf } from "core/src/web-perf";
-import { NodeModel, TimerNodeModel } from "core/src";
 import {
+  WebPerf,
   ErrorsAbstractService,
-  FpsAbstractService, MetricsStoreAbstractService,
+  FpsAbstractService,
+  MetricsStoreAbstractService,
   PrintAbstractService,
   TimerAbstractService,
+  NodeModel,
+  TimerNodeModel
 } from "core";
 
 @Injectable()

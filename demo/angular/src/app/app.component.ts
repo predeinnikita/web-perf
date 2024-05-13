@@ -1,20 +1,39 @@
-import {Component, inject} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import {CommonModule} from "@angular/common";
-import {TodosComponent} from "./todos/todos.component";
-import {WebPerfModule} from "../../../../packages/ng/projects/ng/src/lib/web-perf/web-perf.module";
-import {WebPerfService} from "../../../../packages/ng/projects/ng/src/lib/web-perf/services/web-perf.service";
+import { Component, DestroyRef, inject, Injector, OnInit } from '@angular/core';
+import { TimerNodeModel, WebPerf } from "core";
+import { Observable, of } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public title = 'angular';
   public sequence = [];
+  private injector = inject(Injector)
+  private destroyRef = inject(DestroyRef);
 
-  private webPerfService = inject(WebPerfService);
+  private webPerfService = inject(WebPerf);
+
+  public ngOnInit(): void {
+
+    const timer = new TimerNodeModel({
+      name: 'Initialize AppComponent'
+    });
+
+    this.initialize().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(() => {
+      timer.stop();
+      this.webPerfService.sendStats(timer);
+    });
+  }
+
+  private initialize(): Observable<void> {
+
+    return of(void 0);
+  }
 
   public onCalculateFibonacciSequence(count: number): void {
     const groupName = Symbol('Fibonacci sequence');
@@ -23,7 +42,10 @@ export class AppComponent {
     this.webPerfService.startTime(groupName);
     this.webPerfService.startTime(childGroupName, groupName);
 
+    const timerNode = new TimerNodeModel({ name: 'Fibonacci' });
     this.sequence = this.calculateFibonacciSequence(count);
+    timerNode.stop();
+    // Выведет время выполнения метода calculateFibonacciSequence
 
     this.webPerfService.stopTime(groupName);
   }

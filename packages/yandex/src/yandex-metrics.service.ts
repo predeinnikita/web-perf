@@ -1,4 +1,4 @@
-import {MetricsStoreAbstractService, NodeModel} from 'core'
+import {InfoNodeModel, MetricsStoreAbstractService, NodeModel} from 'core'
 
 declare const ym: (id: number, method: 'params', params: object) => void;
 
@@ -14,12 +14,24 @@ export class YandexMetricsService extends MetricsStoreAbstractService {
         this.id = options.id;
     }
 
-    public send(node: NodeModel): void {
+    public send(node: NodeModel, metadata?: InfoNodeModel): void {
         if (!ym) {
             throw new Error('Yandex Metrica not installed');
         }
         const params = this.nodeToParams(node);
-        ym(this.id, 'params', params);
+
+
+
+        ym(this.id, 'params', {
+            load: {
+                js: 200,
+                html: 100,
+                css: 123,
+            }
+        });
+
+
+
     }
 
     private nodeToParams(node: NodeModel, isChild: boolean = false): any {

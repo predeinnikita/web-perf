@@ -6,7 +6,7 @@
     "build:core": "npx nx build core",
     "build:yandex": "npx nx build yandex",
     "build:influx": "npx nx build influx",
-    "build:ng": "npx nx build ng"
+    "build:ng": "npx nx build web-perf-ng"
   },
   "private": true,
   "dependencies": {

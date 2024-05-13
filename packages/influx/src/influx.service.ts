@@ -1,5 +1,5 @@
-import { MetricsStoreAbstractService, NodeModel } from 'core'
-import {InfluxDB, Point, WriteApi} from '@influxdata/influxdb-client'
+import {InfoNodeModel, MetricsStoreAbstractService, NodeModel} from 'core'
+import {createFluxTableMetaData, InfluxDB, Point, WriteApi} from '@influxdata/influxdb-client'
 
 export interface InfluxOptions {
     url: string;
@@ -17,10 +17,23 @@ export class InfluxService extends MetricsStoreAbstractService {
         this.influxDB = new InfluxDB({ url, token }).getWriteApi(org, bucket, 'ns')
     }
 
-    public send(node: NodeModel): void {
+    public send(node: NodeModel, metadata?: InfoNodeModel): void {
         const point = new Point(this.getNameFrom(node.name));
         this.fillPoint(point, node);
+        if (metadata) {
+            this.addMetadata(point, metadata)
+        }
         this.influxDB.writePoint(point);
+    }
+
+    private addMetadata(point: Point, metadata: InfoNodeModel): void {
+        if (metadata.children?.length) {
+            for (const child of metadata.children) {
+                this.addMetadata(point, child as InfoNodeModel);
+            }
+        } else {
+            point.stringField(`meta:${this.getNameFrom(metadata.name)}`, metadata.result);
+        }
     }
 
     private fillPoint(point: Point, node: NodeModel): void {

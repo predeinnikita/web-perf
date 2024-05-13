@@ -2,13 +2,14 @@ import { TimerNodeModel } from '../../domain';
 import { TimerAbstractService } from "../../domain";
 
 export class TimerService<T extends (string | Symbol) = (string | Symbol)> extends TimerAbstractService<(string | Symbol)> {
-    private nodes: TimerNodeModel[] = [];
+    // private nodes: TimerNodeModel[] = [];
+    private nodesMap = new Map<string | Symbol, TimerNodeModel>();
 
     /**
      * Начать отсчет времени в узле
      */
     public start(name: T, parentName?: T): TimerNodeModel {
-        if (this.hasDataModel(name)) {
+        if (this.nodesMap.has(name)) {
             throw Error('Node with same name exists')
         }
         const node = new TimerNodeModel({ name, parentName });
@@ -27,12 +28,12 @@ export class TimerService<T extends (string | Symbol) = (string | Symbol)> exten
         return node;
     }
 
-    /**
-     * Проверка, есть ли узел с заданным именем в дереве
-     */
-    private hasDataModel(name: T): boolean {
-        return this.nodes.some(data => data.name === name || data.hasChild(name));
-    }
+    // /**
+    //  * Проверка, есть ли узел с заданным именем в дереве
+    //  */
+    // private hasDataModel(name: T): boolean {
+    //     return this.nodes.some(data => data.name === name || data.hasChild(name));
+    // }
 
     /**
      * Добавляет узел в дерево. Если указана группа,
@@ -40,9 +41,10 @@ export class TimerService<T extends (string | Symbol) = (string | Symbol)> exten
      */
     private add(node: TimerNodeModel, parentName?: T): void {
         if (parentName) {
-            return this.findNodeWithName(parentName)?.addChild(node);
+            this.findNodeWithName(parentName)?.addChild(node);
         }
-        this.nodes.push(node);
+        this.nodesMap.set(node.name, node);
+        // this.nodes.push(node);
     }
 
 
@@ -50,20 +52,21 @@ export class TimerService<T extends (string | Symbol) = (string | Symbol)> exten
      * Рекурсивно находит узел с указанным именем
      */
     private findNodeWithName(name: T): TimerNodeModel | null {
-        let node: TimerNodeModel | null = null;
-        const recursiveSearch = (children: TimerNodeModel[]) => {
-            for (let child of children) {
-                if (child.name === name) {
-                    node = child;
-                    return;
-                }
-                if (child.children) {
-                    recursiveSearch(child.children as TimerNodeModel[]);
-                }
-            }
-        }
-        recursiveSearch(this.nodes);
-
-        return node;
+        return this.nodesMap.get(name) || null;
+        // let node: TimerNodeModel | null = null;
+        // const recursiveSearch = (children: TimerNodeModel[]) => {
+        //     for (let child of children) {
+        //         if (child.name === name) {
+        //             node = child;
+        //             return;
+        //         }
+        //         if (child.children) {
+        //             recursiveSearch(child.children as TimerNodeModel[]);
+        //         }
+        //     }
+        // }
+        // recursiveSearch(this.nodes);
+        //
+        // return node;
     }
 }

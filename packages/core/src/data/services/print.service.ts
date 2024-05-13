@@ -3,14 +3,15 @@ import { NodeModel, PrintAbstractService, TimerNodeModel } from '../../domain';
 export class PrintService extends PrintAbstractService {
 
     public print(node: NodeModel): void {
+        const name = typeof node.name === 'string' ? node.name : String(node.name.description);
+
         if (!node.children) {
             const emoji = this.getEmojiByUnit(node.unit);
-            const name = typeof node.name === 'string' ? node.name : String(node.name.description);
-            console.log(`${emoji}${name}: ${node.result}${node.unit}`);
+            console.log(`${emoji}${name}: ${node.result}${node.unit !== 'none' ? node.unit : ''}`);
             return;
         }
 
-        console.groupCollapsed(`⚡${node.name}`);
+        console.groupCollapsed(`⚡${name}`);
         for (const child of node.children) {
             this.print(child);
         }

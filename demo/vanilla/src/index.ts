@@ -1,5 +1,5 @@
-import {WebPerf} from "../../../packages/core/src/web-perf";
-import {InfluxService} from '../../../packages/influx/src';
+import { WebPerf, MetadataService } from "core";
+import { InfluxService } from 'influx';
 
 const influxService = new InfluxService({
     url: 'http://localhost:8086/',
@@ -18,3 +18,6 @@ setTimeout(() => {
     window.location.reload();
 }, 3_600_000)
 
+
+const mds = new MetadataService();
+webPerf.print(mds.getMetadata());
