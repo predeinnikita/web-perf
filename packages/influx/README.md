@@ -19,8 +19,4 @@ const webPerf = WebPerf.init({ metricsService: influx });
 webPerf.startMonitoring();
 ```
 
-After that you can use WebPerf as Angular service:
-```ts
-  private webPerf = inject(WebPerf)
-
-```
+After that WebPerf will send data to InfluxDB and you can see performance visualization.
